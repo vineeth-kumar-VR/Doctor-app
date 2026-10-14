@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "674701876026",
+    "project_id": "doctorapp-e9c65",
+    "storage_bucket": "doctorapp-e9c65.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674701876026:android:32b070af2483f2739d8e03",
+        "android_client_info": {
+          "package_name": "com.example.doctorapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674701876026-qoivlqkqiaf562skg28grcga8dc5uc1v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.doctorapp",
+            "certificate_hash": "ef93d09f8130a6592b4cc4f54d8e63c9e34bade5"
+          }
+        },
+        {
+          "client_id": "674701876026-329retlqrm7eibfbbq3untg6nhn5uvcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4FmrtSGzXj-9ipIGneEW6XShCpQNLnLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674701876026-329retlqrm7eibfbbq3untg6nhn5uvcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "674701876026-s1668lajdj8ujf2c70k6dt77dr5kuccu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.doctorapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
