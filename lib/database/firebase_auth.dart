@@ -13,14 +13,25 @@ catch(e){
 }
 }
 
-Future<User?>login(String email, String password)async{
-try{
-  UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-return userCredential.user;
-}
-catch(e){
-  print("Login error: $e");
-  return null;
-}
-}
+
+  Future<User?> login(String email, String password) async {
+    try {
+      final userCredential =
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password,
+      );
+
+      print('Login successful: ${userCredential.user?.uid}');
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      print('Firebase login error code: ${e.code}');
+      print('Firebase login error message: ${e.message}');
+      return null;
+    } catch (e) {
+      print('Unexpected login error: $e');
+      return null;
+    }
+  }
+
 }

@@ -24,7 +24,10 @@ class LoginController extends GetxController{
     }
 
       try{
-        User? user = await authentication.login(emailcontroller.text.trim(), passwordcontroller.text.trim());
+        User? user = await authentication.login(
+          emailcontroller.text.trim(),
+          passwordcontroller.text,
+        );
 
         if(user!=null){
           Get.snackbar(

@@ -355,6 +355,7 @@ Stream<List<Map<String,dynamic>>>fetchfavdoctor(){
 
 Future<void>logout()async{
     await FirebaseAuth.instance.signOut();
+    print("User after logout: ${FirebaseAuth.instance.currentUser}");
     Get.offAll(()=>LoginPage());
 
 }
