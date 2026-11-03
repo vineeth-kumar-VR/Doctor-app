@@ -133,37 +133,6 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
 
-
-              const SizedBox(height: 10),
-
-
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Mobile Number",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              TextInputField(
-                onchanged: (value) {},
-                controller: otpController.phonecontroller,
-                hinttext: "Enter mobile number",
-                prefixicon: Icons.phone,
-              ),
-
-              const SizedBox(height: 10),
-
-              ButtonsField(
-                text: "Send OTP",
-                onpressed: () {
-                  print("SEND OTP BUTTON CLICKED");
-                  otpController.sendotp();
-                },
-              ),
         
         
             ],

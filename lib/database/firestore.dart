@@ -2,27 +2,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctorapp/auth_pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 class Firestore{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void>savessignupdata( {
-   required String name, required String email,required String phone,required String uid
-})async{
-    try{
+  Future<void> savessignupdata({
+    required String name,
+    required String email,
+    required String phone,
+    required String uid,
+  }) async {
+    try {
       await _firestore.collection("users").doc(uid).set({
-        "name":name,
-        "email":email,
+        "name": name.trim(),
+        "email": email.trim(),
+        "phone": phone.trim(),
+        "uid": uid,
+        "time": FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
-        "phone":phone,
-        "uid":uid,
-        "time":FieldValue.serverTimestamp()
-      });
-    }
-    catch(e){
-      print("error$e");
+      print("User data saved successfully");
+      print("Name: $name");
+      print("Email: $email");
+      print("Phone: $phone");
+    } catch (e) {
+      print("Firestore save error: $e");
+      rethrow;
     }
   }
-
   Future<bool> checkGoogleEmail(String email) async {
     try {
       final result = await _firestore
@@ -353,11 +360,10 @@ Stream<List<Map<String,dynamic>>>fetchfavdoctor(){
     });
 }
 
-Future<void>logout()async{
+  Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
-    print("User after logout: ${FirebaseAuth.instance.currentUser}");
-    Get.offAll(()=>LoginPage());
-
-}
+    await GoogleSignIn.instance.signOut();
+    Get.offAll(() => LoginPage());
+  }
 
 }

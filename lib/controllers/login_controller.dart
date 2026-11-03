@@ -1,62 +1,50 @@
-import 'package:doctorapp/colors/color.dart';
 import 'package:doctorapp/database/firebase_auth.dart';
-import 'package:doctorapp/pages/doctordetail.dart';
 import 'package:doctorapp/pages/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-class LoginController extends GetxController{
+class LoginController extends GetxController {
   final authentication = Authentication();
 
   final TextEditingController emailcontroller = TextEditingController();
   final TextEditingController passwordcontroller = TextEditingController();
 
-  Future<void>logincheck()async{
-    if(emailcontroller.text.trim().isEmpty || passwordcontroller.text.trim().isEmpty){
+  Future<void> logincheck() async {
+    final email = emailcontroller.text.trim();
+    final password = passwordcontroller.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
       Get.snackbar(
-          borderRadius: 10,
-          backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-          "Error", "Please Enter All The Fields");
+        "Error",
+        "Please Enter All The Fields",
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
 
-      try{
-        User? user = await authentication.login(
-          emailcontroller.text.trim(),
-          passwordcontroller.text,
-        );
+    try {
+      User? user = await authentication.login(email, password);
 
-        if(user!=null){
-          Get.snackbar(
-            "Success", "Login Successful",
-            snackPosition: SnackPosition.BOTTOM,
-            borderRadius: 10,
-            backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-          );
-          emailcontroller.clear();
-          passwordcontroller.clear();
-          Get.to(()=>HomePage());
-       }
-        else{
-          Get.snackbar(
-            "Auth Error", "Login Failed",
-            snackPosition: SnackPosition.BOTTOM,
-            borderRadius: 10,
-            backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-          );
-        }
+      if (user != null) {
+        Get.snackbar("Success", "Login Successful", snackPosition: SnackPosition.BOTTOM);
+        emailcontroller.clear();
+        passwordcontroller.clear();
+        Get.offAll(() => HomePage());
+      } else {
+        Get.snackbar("Auth Error", "Login Failed", snackPosition: SnackPosition.BOTTOM);
       }
-    catch(e){
-      Get.snackbar(
-        "Error", "$e",
-        snackPosition: SnackPosition.BOTTOM,
-        borderRadius: 10,
-        backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-      );
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar("Login Failed", e.message ?? e.code, snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
+  }
 
+  @override
+  void onClose() {
+    emailcontroller.dispose();
+    passwordcontroller.dispose();
+    super.onClose();
   }
 }

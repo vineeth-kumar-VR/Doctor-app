@@ -1,132 +1,82 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctorapp/auth_pages/login.dart';
-import 'package:doctorapp/colors/color.dart';
 import 'package:doctorapp/database/firebase_auth.dart';
 import 'package:doctorapp/database/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class SignupController extends GetxController{
+class SignupController extends GetxController {
   final firestore = Firestore();
   final authentication = Authentication();
+
   final TextEditingController namecontroller = TextEditingController();
   final TextEditingController emailcontroller = TextEditingController();
   final TextEditingController passwordcontroller = TextEditingController();
   final TextEditingController conpasswordcontroller = TextEditingController();
   final TextEditingController phonecontroller = TextEditingController();
 
+  Future<void> signup() async {
+    final name = namecontroller.text.trim();
+    final email = emailcontroller.text.trim();
+    final password = passwordcontroller.text.trim();
+    final conPassword = conpasswordcontroller.text.trim();
+    final phone = phonecontroller.text.trim();
 
-  Future<void>signup()async {
-    if (namecontroller.text
-        .trim()
-        .isEmpty || emailcontroller.text
-        .trim()
-        .isEmpty || passwordcontroller.text
-        .trim()
-        .isEmpty || conpasswordcontroller.text
-        .trim()
-        .isEmpty || phonecontroller.text
-        .trim()
-        .isEmpty) {
-      Get.snackbar(
-          borderRadius: 10,
-          backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-          snackPosition: SnackPosition.BOTTOM,
-          "Error", "Please Enter All The Fields");
+    if (name.isEmpty || email.isEmpty || password.isEmpty || conPassword.isEmpty || phone.isEmpty) {
+      Get.snackbar("Error", "Please Enter All The Fields", snackPosition: SnackPosition.BOTTOM);
       return;
     }
-    String password = passwordcontroller.text.trim();
-    if(password.length < 8){
-      Get.snackbar("Weak Password", "Password must contain at least 8 characters",
-      borderRadius: 10,
-        snackPosition: SnackPosition.BOTTOM
-      );
-      return;
-    }
-    if(!RegExp(r'[A-Z]').hasMatch(password)){
-      Get.snackbar("Weak Password",
-        "Password must contain at least one uppercase letter",
-      borderRadius: 10,
-        snackPosition: SnackPosition.BOTTOM
-      );
-      return;
-    }
-    if(!RegExp(r'[a-z]').hasMatch(password)){
-      Get.snackbar("Weak Password",
-          "Password must contain at least one uppercase letter",
-          borderRadius: 10,
-          snackPosition: SnackPosition.BOTTOM
-      );
-      return;
 
-    }
-    if(!RegExp(r'[0-9]').hasMatch(password)){
-      Get.snackbar(
-        "Weak Password",
-        "Password must contain at least one number",
-        borderRadius: 10,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
+    if (password != conPassword) {
+      Get.snackbar("Password Error", "Passwords do not match", snackPosition: SnackPosition.BOTTOM);
       return;
     }
-    if(RegExp(r'[!@#$%^&*(),.?":{}|<>]]').hasMatch(password)){
-      Get.snackbar(
-        "Weak Password",
-        "Password must contain at least one special character",
-        borderRadius: 10,
-        snackPosition: SnackPosition.BOTTOM,
-      );
 
-      return;
-    }
-    if(passwordcontroller.text != conpasswordcontroller.text){
-      Get.snackbar(
-        "Password Error",
-        "Passwords do not match",
-        borderRadius: 10,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    try {
+      User? user = await authentication.signupwithemailandpassword(email, password);
 
-      return;
-    }
-    User? user = await authentication.signupwithemailandpassword(
-        emailcontroller.text, passwordcontroller.text);
-    if (user != null) {
-      try {
-        await firestore.savessignupdata(name: namecontroller.text,
-            email: emailcontroller.text,
-            phone: phonecontroller.text,
-            uid: user.uid);
-        Get.snackbar(
-            borderRadius: 10,
-            backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
+      if (user != null) {
+        // 1. Save profile to Firestore including the password
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'uid': user.uid,
+          'password': password, // Stored to automatically restore if Google strips it
+        });
 
-            "Success", "SignUp Success");
+        // 2. Sign out so user starts fresh on the Login page
+        await FirebaseAuth.instance.signOut();
+
         namecontroller.clear();
         emailcontroller.clear();
         passwordcontroller.clear();
         conpasswordcontroller.clear();
         phonecontroller.clear();
 
-        Get.to(()=>LoginPage());
-      }
-
-      catch (e) {
         Get.snackbar(
-          "Firestore Error", "$e", snackPosition: SnackPosition.BOTTOM,
-          borderRadius: 10,
-          backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-
+          "Success",
+          "Signup Successful",
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          snackPosition: SnackPosition.BOTTOM,
         );
+
+        Get.offAll(() => const LoginPage());
       }
+    } catch (e) {
+      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
-    else {
-      Get.snackbar(
-          backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
-          borderRadius: 10,
-          "Auth Error", "SignUp Failed");
-    }
+  }
+
+  @override
+  void onClose() {
+    namecontroller.dispose();
+    emailcontroller.dispose();
+    passwordcontroller.dispose();
+    conpasswordcontroller.dispose();
+    phonecontroller.dispose();
+    super.onClose();
   }
 }
