@@ -51,7 +51,12 @@ bool isbool = false;
       'title':'Terms & Conditions',
       'icon':Icons.arrow_forward,
       'page':TermsPage()
-    }
+    },
+    {
+      'title':"Payment Hiostory",
+      'icon':"",
+      "page":""
+    },
   ];
 
   @override

@@ -27,13 +27,36 @@ class _State extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
+      appBar:
+      AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Welcome 👋"),
+        title: const Text("Welcome 👋"),
         actions: [
           IconButton(
-            onPressed: () async{
-              await Firestore().logout();
+            onPressed: () {
+              Get.dialog(
+                AlertDialog(
+                  title: const Text("Confirm Logout"),
+                  content: const Text(
+                    "Are you sure you want to logout?",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back(); // Close popup
+                      },
+                      child: const Text("No"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Get.back(); // Close popup
+                        await Firestore().logout();
+                      },
+                      child: const Text("Yes"),
+                    ),
+                  ],
+                ),
+              );
             },
             icon: const Icon(
               Icons.logout,
@@ -42,8 +65,8 @@ class _State extends State<HomePage> {
             tooltip: "Logout",
           ),
         ],
-
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [

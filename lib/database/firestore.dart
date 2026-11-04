@@ -3,6 +3,7 @@ import 'package:doctorapp/auth_pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 class Firestore{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -365,5 +366,24 @@ Stream<List<Map<String,dynamic>>>fetchfavdoctor(){
     await GoogleSignIn.instance.signOut();
     Get.offAll(() => LoginPage());
   }
+
+Future<void>paymentsuccess({
+    required String doctorname,
+  required String paymentid,
+  required String orderid
+})async{
+    final user = FirebaseAuth.instance.currentUser;
+    if(user == null){
+      return;
+    }
+    await _firestore.collection("users").doc(user.uid).collection("successpayment").add({
+      "doctorname":doctorname,
+      "paymentid":paymentid,
+      "amount":500,
+      "orderid":orderid,
+      "status":"success",
+      "createdat":FieldValue.serverTimestamp()
+    });
+}
 
 }

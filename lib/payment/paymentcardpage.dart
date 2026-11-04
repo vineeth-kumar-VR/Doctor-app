@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:doctorapp/database/firestore.dart';
 class PaymentCardPage extends StatefulWidget {
   final String doctorname;
   const PaymentCardPage({super.key, required this.doctorname,});
@@ -33,9 +34,22 @@ class _PaymentCardPage extends State<PaymentCardPage> {
     };
     razorpay.open(options);
   }
-  void _handlepaymentsuccess(PaymentSuccessResponse response){
-    print("Success${response.paymentId}");
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Success")));
+  void _handlepaymentsuccess(PaymentSuccessResponse response) async {
+    try {
+      await Firestore().paymentsuccess(
+        doctorname: widget.doctorname,
+        paymentid: response.paymentId ?? '',
+        orderid: response.orderId ?? '',
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Payment Success')),
+      );
+    } catch (e) {
+      debugPrint('Payment saving error: $e');
+    }
   }
   void _handlepaymentfailure(PaymentFailureResponse response){
     print("Error${response.error}");

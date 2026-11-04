@@ -51,7 +51,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   appoinments(appointmentlist),
                   SizedBox(height: 10,),
 
-                  Text("Past Appoinments",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
+                  Text("Cancel Appoinments",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
                   pastappoinment()
 
 
