@@ -5,6 +5,8 @@ import 'package:doctorapp/pages/doctorappointments.dart';
 import 'package:doctorapp/pages/editpage.dart';
 import 'package:doctorapp/pages/favouritedoctorpage.dart';
 import 'package:doctorapp/pages/helppage.dart';
+import 'package:doctorapp/pages/historypage.dart';
+import 'package:doctorapp/pages/payment.dart';
 import 'package:doctorapp/pages/privacypage.dart';
 import 'package:doctorapp/pages/termspage.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +55,9 @@ bool isbool = false;
       'page':TermsPage()
     },
     {
-      'title':"Payment Hiostory",
-      'icon':"",
-      "page":""
+      'title':"Payment History",
+      'icon':Icons.arrow_forward,
+      "page":Historypage()
     },
   ];
 

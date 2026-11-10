@@ -12,7 +12,8 @@ import 'package:get/get.dart';
 
 class AppoinmentDetails extends StatefulWidget {
   final Map<String,dynamic>appointmentlist;
-  const AppoinmentDetails({super.key,required this.appointmentlist});
+  final String appointmentid;
+  const AppoinmentDetails({super.key,required this.appointmentlist, required this.appointmentid});
 
   @override
   State<AppoinmentDetails> createState() => _AppoinmentDetailsState();
@@ -45,6 +46,8 @@ class _AppoinmentDetailsState extends State<AppoinmentDetails> {
                   appoinmentdetails(data,context,(){
                     Get.to( PaymentCardPage(
                       doctorname: data["doctor"],
+                      appointmentid: data["id"],
+
 
                     ));
                   })
@@ -66,7 +69,7 @@ Widget appoinmentdetails(Map<String,dynamic>item, BuildContext context,VoidCallb
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-Text(" 👨‍⚕️ Doctor: ${item['doctor'] ?? "unkown"}",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,)),
+Text(" 👨‍⚕️ Doctor: ${item['doctor'] ?? "unknown"}",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,)),
           SizedBox(height: 5,),
 
           Text(" 📍 Location: ${item['location']}",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,)),

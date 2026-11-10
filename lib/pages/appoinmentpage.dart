@@ -93,7 +93,9 @@ return Card(
         children: [
           ButtonsField(text: "View Details",
           onpressed: (){
-Get.to(()=> AppoinmentDetails(appointmentlist: item,));
+Get.to(()=> AppoinmentDetails(appointmentlist: item,
+appointmentid: item["id"],
+));
           },
           ),
 

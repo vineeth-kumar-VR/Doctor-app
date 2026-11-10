@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:doctorapp/database/firestore.dart';
 class PaymentCardPage extends StatefulWidget {
   final String doctorname;
-  const PaymentCardPage({super.key, required this.doctorname,});
+  final String appointmentid;
+  const PaymentCardPage({super.key, required this.doctorname,required this.appointmentid});
 
   @override
   State<PaymentCardPage> createState() => _PaymentCardPage();

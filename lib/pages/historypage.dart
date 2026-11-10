@@ -42,12 +42,12 @@ class _HistorypageState extends State<Historypage> {
             return ListView.builder(
                 itemCount: payment.length,
                 itemBuilder: (context, index){
-                  final data = payment[index];
+                  final data = payment[index].data() as  Map<String, dynamic>;
                   return Card(
                     child: ListTile(
                       leading: Icon(Icons.check_circle,color: Colors.green,),
                       title: Text(data["doctorname"] ?? "Doctor"),
-                      subtitle: Text("PaymentId: ${data["paymentId"] ?? "N/A"}"),
+                      subtitle: Text("PaymentId: ${data["paymentid"] ?? "N/A"}"),
                        trailing: Text('₹${data['amount'] ?? 0}'),
 
                     ),
