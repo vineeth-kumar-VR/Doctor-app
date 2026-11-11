@@ -41,6 +41,7 @@ class _PaymentCardPage extends State<PaymentCardPage> {
         doctorname: widget.doctorname,
         paymentid: response.paymentId ?? '',
         orderid: response.orderId ?? '',
+        appointmentId: widget.appointmentid
       );
 
       if (!mounted) return;

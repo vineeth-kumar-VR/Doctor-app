@@ -25,19 +25,23 @@ class _HistorypageState extends State<Historypage> {
       appBar: AppBar(
         title: Text("Payment History List",style: TextStyle(color: Colors.black),),
       ),
-      body: StreamBuilder(stream: FirebaseFirestore.instance.collection("user").doc(user.uid).
-          collection("successpayment").where("status", isEqualTo: "Success").orderBy("createdAt",descending: true).
+      body: StreamBuilder(stream: FirebaseFirestore.instance.collection("users").doc(user.uid).
+          collection("successpayment").where("status", isEqualTo: "success").orderBy("createdat",descending: true).
           snapshots(),
 
           
           builder: (context, snapshot){
+            print("HAS ERROR: ${snapshot.hasError}");
+            print("ERROR: ${snapshot.error}");
+            print("DOCUMENT COUNT: ${snapshot.data?.docs.length}");
         if(snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator(),);
         };
             if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
               return Center(child: Text("No Successful Payment Found", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),);
 
-            }
+            };
+
             final payment = snapshot.data!.docs;
             return ListView.builder(
                 itemCount: payment.length,

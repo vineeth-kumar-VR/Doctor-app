@@ -367,23 +367,56 @@ Stream<List<Map<String,dynamic>>>fetchfavdoctor(){
     Get.offAll(() => LoginPage());
   }
 
-Future<void>paymentsuccess({
+  Future<void> paymentsuccess({
     required String doctorname,
-  required String paymentid,
-  required String orderid
-})async{
+    required String paymentid,
+    required String orderid,
+    required String appointmentId,
+  }) async {
     final user = FirebaseAuth.instance.currentUser;
-    if(user == null){
-      return;
+
+    if (user == null) return;
+
+    try {
+      final appointmentRef = _firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("appointments")
+          .doc(appointmentId);
+
+      final appointmentDoc = await appointmentRef.get();
+
+      if (!appointmentDoc.exists) {
+        throw Exception("Appointment not found");
+      }
+
+      final appointmentData = appointmentDoc.data()!;
+
+      // Save successful payment
+      await _firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("successpayment")
+          .add({
+        "doctorname": doctorname,
+        "paymentid": paymentid,
+        "amount": 500,
+        "orderid": orderid,
+        "status": "success",
+        "createdat": FieldValue.serverTimestamp(),
+        "appointment": appointmentData,
+      });
+
+      // Remove only the paid appointment from upcoming appointments
+      await appointmentRef.delete();
+
+      print("Payment saved successfully");
+      print("Paid appointment removed from upcoming appointments");
+    } catch (e) {
+      print("Payment error: $e");
+      rethrow;
     }
-    await _firestore.collection("users").doc(user.uid).collection("successpayment").add({
-      "doctorname":doctorname,
-      "paymentid":paymentid,
-      "amount":500,
-      "orderid":orderid,
-      "status":"success",
-      "createdat":FieldValue.serverTimestamp()
-    });
-}
+  }
+
 
 }
