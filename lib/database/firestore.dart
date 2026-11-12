@@ -197,13 +197,34 @@ Future<void>deleteappointment(String datadelete)async{
  }
 }
 
-Stream<List<Map<String,dynamic>>>fetchdeleteappointments(){
+  Stream<List<Map<String, dynamic>>> fetchdeleteappointments() {
     final user = FirebaseAuth.instance.currentUser;
-    if(user != null){
-      return _firestore.collection("users").doc(user.uid).collection("deleteappointment").orderBy("date",descending: true).snapshots().map((snapshot)=>snapshot.docs.map((doc)=>doc.data() as Map<String,dynamic>).toList());
+
+    print("CANCELLED USER UID: ${user?.uid}");
+
+    if (user != null) {
+      return _firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("deleteappointment")
+          .orderBy("date", descending: true)
+          .snapshots()
+          .map((snapshot) {
+        print("CANCELLED DOCUMENT COUNT: ${snapshot.docs.length}");
+
+        return snapshot.docs.map((doc) {
+          final data = doc.data();
+          data["id"] = doc.id;
+
+          print("CANCELLED DATA: $data");
+
+          return data;
+        }).toList();
+      });
     }
+
     return Stream.empty();
-}
+  }
   Stream<List<Map<String, dynamic>>> fetchDoctorNameAndCategory() {
     return _firestore.collection("doctors").snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {

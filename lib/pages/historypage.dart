@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctorapp/colors/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,8 @@ class _HistorypageState extends State<Historypage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Payment History List",style: TextStyle(color: Colors.black),),
+        backgroundColor: appbarcolor,
+        title: Text("Payment History List"),
       ),
       body: StreamBuilder(stream: FirebaseFirestore.instance.collection("users").doc(user.uid).
           collection("successpayment").where("status", isEqualTo: "success").orderBy("createdat",descending: true).
